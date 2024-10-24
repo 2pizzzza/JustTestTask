@@ -14,8 +14,6 @@ class UserRegistrationView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
 
-        Wallet.objects.create(user=user)
-
         return Response({
             "user": {
                 "username": user.username,
