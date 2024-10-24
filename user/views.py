@@ -1,6 +1,8 @@
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
+
+from wallet.models import Wallet
 from .serializers import UserRegistrationSerializer
 
 
@@ -11,6 +13,9 @@ class UserRegistrationView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+
+        Wallet.objects.create(user=user)
+
         return Response({
             "user": {
                 "username": user.username,
