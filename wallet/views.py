@@ -1,8 +1,18 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
-from .models import Coin
+from .models import Coin, Transaction
 from .serializers import WalletSerializer, CoinSerializer
+
+
+class UserTransactionsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        transactions = Transaction.objects.filter(wallet__user=user)
+        serializer = TransactionSerializer(transactions, many=True)
+        return Response(serializer.data)
 
 
 class WalletView(APIView):
@@ -39,7 +49,6 @@ class TransactionView(APIView):
 
 
 class CoinListView(APIView):
-    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         coins = Coin.objects.all()

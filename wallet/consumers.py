@@ -12,14 +12,15 @@ class BitcoinPriceConsumer(AsyncWebsocketConsumer):
         asyncio.create_task(self.monitor_price())
 
     async def disconnect(self, close_code):
-        pass
+        if hasattr(self, 'price_monitor_task'):
+            self.price_monitor_task.cancel()
 
     async def monitor_price(self):
 
         while True:
             price_message = self.get_bitcoin_price()
             await self.send(text_data=json.dumps(price_message))
-            await asyncio.sleep(0.1)
+            await asyncio.sleep(2)
 
     def get_bitcoin_price(self):
 

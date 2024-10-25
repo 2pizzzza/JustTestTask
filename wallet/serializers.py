@@ -2,10 +2,17 @@ from rest_framework import serializers
 from .models import Wallet, WalletCoin, Transaction, Coin
 
 
+class TransactionSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = ['id', 'coin', 'amount', 'price', 'transaction_type', 'created_at']
+
+
 class CoinSerializer(serializers.ModelSerializer):
     class Meta:
         model = Coin
         fields = ['id', 'name']
+
 
 class WalletCoinSerializer(serializers.ModelSerializer):
     coin_name = serializers.CharField(source='coin.name')
